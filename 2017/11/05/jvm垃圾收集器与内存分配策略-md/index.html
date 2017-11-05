@@ -86,12 +86,12 @@
 <meta property="og:site_name" content="caiyl">
 <meta property="og:description" content="对象已死在回收对象之前需要确认对象是否已经死了，可以回收了。 引用计算法引用计数法是指对对象添加一个引用的时候，引用计数器就加1，当对对象的引用少了一个的时候，计数器就减1，当对象的引用为0的时候，对象就认为已经死去。但是当对象之间互相循环引用的时候，引用计算法就无效了，例如： ObjectA a 内部持有 ObjectB b的引用，ObjectB b内部也持有ObjectA a的引用。当a=nu">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/caiyl/images/blob/master/A.png">
-<meta property="og:updated_time" content="2017-11-05T11:29:27.000Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/caiyl/images/master/A.png">
+<meta property="og:updated_time" content="2017-11-05T11:33:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jvm垃圾收集器与内存分配策略.md">
 <meta name="twitter:description" content="对象已死在回收对象之前需要确认对象是否已经死了，可以回收了。 引用计算法引用计数法是指对对象添加一个引用的时候，引用计数器就加1，当对对象的引用少了一个的时候，计数器就减1，当对象的引用为0的时候，对象就认为已经死去。但是当对象之间互相循环引用的时候，引用计算法就无效了，例如： ObjectA a 内部持有 ObjectB b的引用，ObjectB b内部也持有ObjectA a的引用。当a=nu">
-<meta name="twitter:image" content="https://github.com/caiyl/images/blob/master/A.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/caiyl/images/master/A.png">
 
 
 
@@ -314,7 +314,7 @@
 <h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>复制算法把堆内存分成两个区域，每次使用其中一块区域，当回收的时候，一次过把存活的对象拷贝到另外一块区域，然后清除该块区域。在hotSpot中，因为大部分对象都是朝生夕死，所以把堆内存分成Eden区和两块Survivor区域，每次只使用一块Eden和一块Survivor区域。Eden和Survivor的默认比例是8：1。</p>
 <h3 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h3><p>把所有存活的对象都推向一端，然后清理边界以外的区域。</p>
 <h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>jvm包含的垃圾收集器如下图</p>
-<p><img src="https://github.com/caiyl/images/blob/master/A.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/caiyl/images/master/A.png" alt=""></p>
 
       
     </div>

@@ -313,7 +313,7 @@
 <h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>复制算法把堆内存分成两个区域，每次使用其中一块区域，当回收的时候，一次过把存活的对象拷贝到另外一块区域，然后清除该块区域。在hotSpot中，因为大部分对象都是朝生夕死，所以把堆内存分成Eden区和两块Survivor区域，每次只使用一块Eden和一块Survivor区域。Eden和Survivor的默认比例是8：1。</p>
 <h3 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h3><p>把所有存活的对象都推向一端，然后清理边界以外的区域。</p>
 <h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>jvm包含的垃圾收集器如下图</p>
-<p><img src="https://github.com/caiyl/images/blob/master/A.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/caiyl/images/master/A.png" alt=""></p>
 
           
         
