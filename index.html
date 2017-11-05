@@ -229,6 +229,142 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/jvm的内存区域划分-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caiyl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caiyl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/05/jvm的内存区域划分-md/" itemprop="url">jvm的内存区域划分.md</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T10:58:29+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="jvm运行时内存区域的划分"><a href="#jvm运行时内存区域的划分" class="headerlink" title="jvm运行时内存区域的划分"></a>jvm运行时内存区域的划分</h1><ul>
+<li><p>jvm虚拟机栈</p>
+<p><strong>虚拟机栈是线程独享的</strong>，每个线程有自己的虚拟机栈，每个方法执行的时候创建一个栈桢，方法结束栈桢出栈</p>
+</li>
+<li><p>堆</p>
+<p>  堆主要用来存放对象，<strong>每个线程共享堆</strong></p>
+</li>
+<li><p>程序计数器</p>
+<p>  程序计数器是存在每个线程的当前执行到那条指令，用于线程要执行那条指令的时候，从中取。</p>
+</li>
+<li><p>本地方法栈</p>
+<p>  本地方法栈与虚拟机栈类似，本地方法栈是执行native method方法的栈</p>
+</li>
+<li><p>方法区</p>
+<p>  方法区又称永久代，用于存放类加载的信息，元数据，常量池</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/04/apache安装与反向代理配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -551,7 +687,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
