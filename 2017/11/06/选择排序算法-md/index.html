@@ -79,19 +79,17 @@
 
 
 
-<meta name="description" content="对象已死在回收对象之前需要确认对象是否已经死了，可以回收了。 引用计算法引用计数法是指对对象添加一个引用的时候，引用计数器就加1，当对对象的引用少了一个的时候，计数器就减1，当对象的引用为0的时候，对象就认为已经死去。但是当对象之间互相循环引用的时候，引用计算法就无效了，例如： ObjectA a 内部持有 ObjectB b的引用，ObjectB b内部也持有ObjectA a的引用。当a=nu">
+<meta name="description" content="选择排序选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。选择排序的主要优点与数据移动有关。如果某个元素位于正确的最终位置上，则它不会被移动。选择排序每次交换一对元素，它们当中至少有一个将被移">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jvm垃圾收集器与内存分配策略.md">
-<meta property="og:url" content="http://yoursite.com/2017/11/05/jvm垃圾收集器与内存分配策略-md/index.html">
+<meta property="og:title" content="选择排序算法.md">
+<meta property="og:url" content="http://yoursite.com/2017/11/06/选择排序算法-md/index.html">
 <meta property="og:site_name" content="caiyl">
-<meta property="og:description" content="对象已死在回收对象之前需要确认对象是否已经死了，可以回收了。 引用计算法引用计数法是指对对象添加一个引用的时候，引用计数器就加1，当对对象的引用少了一个的时候，计数器就减1，当对象的引用为0的时候，对象就认为已经死去。但是当对象之间互相循环引用的时候，引用计算法就无效了，例如： ObjectA a 内部持有 ObjectB b的引用，ObjectB b内部也持有ObjectA a的引用。当a=nu">
+<meta property="og:description" content="选择排序选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。选择排序的主要优点与数据移动有关。如果某个元素位于正确的最终位置上，则它不会被移动。选择排序每次交换一对元素，它们当中至少有一个将被移">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/caiyl/images/master/A.png">
-<meta property="og:updated_time" content="2017-11-05T11:33:24.000Z">
+<meta property="og:updated_time" content="2017-11-06T12:36:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jvm垃圾收集器与内存分配策略.md">
-<meta name="twitter:description" content="对象已死在回收对象之前需要确认对象是否已经死了，可以回收了。 引用计算法引用计数法是指对对象添加一个引用的时候，引用计数器就加1，当对对象的引用少了一个的时候，计数器就减1，当对象的引用为0的时候，对象就认为已经死去。但是当对象之间互相循环引用的时候，引用计算法就无效了，例如： ObjectA a 内部持有 ObjectB b的引用，ObjectB b内部也持有ObjectA a的引用。当a=nu">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/caiyl/images/master/A.png">
+<meta name="twitter:title" content="选择排序算法.md">
+<meta name="twitter:description" content="选择排序选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。选择排序的主要优点与数据移动有关。如果某个元素位于正确的最终位置上，则它不会被移动。选择排序每次交换一对元素，它们当中至少有一个将被移">
 
 
 
@@ -121,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/05/jvm垃圾收集器与内存分配策略-md/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/06/选择排序算法-md/"/>
 
 
 
 
 
-  <title>jvm垃圾收集器与内存分配策略.md | caiyl</title>
+  <title>选择排序算法.md | caiyl</title>
   
 
 
@@ -234,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/jvm垃圾收集器与内存分配策略-md/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/06/选择排序算法-md/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="caiyl">
@@ -251,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">jvm垃圾收集器与内存分配策略.md</h1>
+          <h1 class="post-title" itemprop="name headline">选择排序算法.md</h1>
         
 
         <div class="post-meta">
@@ -263,8 +261,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T11:34:01+08:00">
-                2017-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-06T20:06:48+08:00">
+                2017-11-06
               </time>
             
 
@@ -301,21 +299,10 @@
       
 
       
-        <h2 id="对象已死"><a href="#对象已死" class="headerlink" title="对象已死"></a>对象已死</h2><p>在回收对象之前需要确认对象是否已经死了，可以回收了。</p>
-<h3 id="引用计算法"><a href="#引用计算法" class="headerlink" title="引用计算法"></a>引用计算法</h3><p>引用计数法是指对对象添加一个引用的时候，引用计数器就加1，当对对象的引用少了一个的时候，计数器就减1，当对象的引用为0的时候，对象就认为已经死去。但是当对象之间互相循环引用的时候，引用计算法就无效了，例如： ObjectA a 内部持有 ObjectB b的引用，ObjectB b内部也持有ObjectA a的引用。当a=null ;b=null是，对象内部还互相引用着对方，所以无法回收对象。<strong><em>幸好java不是采用这种算法</em></strong></p>
-<h3 id="根搜索算法"><a href="#根搜索算法" class="headerlink" title="根搜索算法"></a>根搜索算法</h3><p>根搜索算法，从GC Root对象出发，搜索对象，当有引用链，让对象能链接到GC Root的时候，说明该对象还可到达，不能回收，否则回收该对象。<strong><em>java就是用根搜索算法回收对象。</em></strong></p>
-<h4 id="GcRoot对象有以下这些"><a href="#GcRoot对象有以下这些" class="headerlink" title="GcRoot对象有以下这些"></a>GcRoot对象有以下这些</h4><ul>
-<li>虚拟机栈中引用的对象</li>
-<li>方法区中的类静态属性引用的对象</li>
-<li>方法区中的常量引用的对象</li>
-<li>本地方法栈中JNI的引用的对象</li>
-</ul>
-<h2 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h2><h3 id="标记清除算法"><a href="#标记清除算法" class="headerlink" title="标记清除算法"></a>标记清除算法</h3><p>标记清除算法首先标记出可以回收的对象，然后一次过回收对象</p>
-<h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>复制算法把堆内存分成两个区域，每次使用其中一块区域，当回收的时候，一次过把存活的对象拷贝到另外一块区域，然后清除该块区域。在hotSpot中，因为大部分对象都是朝生夕死，所以把堆内存分成Eden区和两块Survivor区域，每次只使用一块Eden和一块Survivor区域。Eden和Survivor的默认比例是8：1。</p>
-<h3 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h3><p>把所有存活的对象都推向一端，然后清理边界以外的区域。</p>
-<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>jvm包含的垃圾收集器如下图</p>
-<p><img src="https://raw.githubusercontent.com/caiyl/images/master/A.png" alt=""></p>
-
+        <h1 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h1><p>选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。<br>选择排序的主要优点与数据移动有关。如果某个元素位于正确的最终位置上，则它不会被移动。选择排序每次交换一对元素，它们当中至少有一个将被移到其最终位置上，因此对 {\displaystyle n} n个元素的表进行排序总共进行至多 {\displaystyle n-1} {\displaystyle n-1}次交换。在所有的完全依靠交换去移动元素的排序方法中，选择排序属于非常好的一种。<a href="https://zh.wikipedia.org/wiki/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F" target="_blank" rel="external">维基百科</a></p>
+<p>代码实现如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">package cai.suanfa;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by caiyl on 2017/11/5.</div><div class="line"> * 选择排序</div><div class="line"> */</div><div class="line">public class SelectSort extends TempSort&#123;</div><div class="line"></div><div class="line">    private Integer[] arr = &#123;9,2,1,7,3,8&#125;;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SelectSort selectSort = new SelectSort();</div><div class="line">        selectSort.sort(selectSort.arr);</div><div class="line">        selectSort.show(selectSort.arr);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void sort(Comparable[] arr) &#123;</div><div class="line"></div><div class="line">        for (int i = 0; i &lt; arr.length; i++) &#123;</div><div class="line">            int min = i;</div><div class="line">            for (int j = i+1; j &lt; arr.length; j++) &#123;</div><div class="line">                if (isLess(arr[j],arr[min])) &#123;</div><div class="line">                    min = j;//找出最小元素的位置</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            exch(arr,i,min);//交换</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">package cai.suanfa;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Created by caiyl on 2017/11/5.</div><div class="line"> */</div><div class="line">public abstract class  TempSort &#123;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 打印排序过的数据</div><div class="line">     * @param arr</div><div class="line">     */</div><div class="line">    public void show(Comparable [] arr) &#123;</div><div class="line">        for (int i = 0; i &lt; arr.length; i++) &#123;</div><div class="line">            System.out.println(arr[i]);</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * v1是否小于v2</div><div class="line">     * @param v1</div><div class="line">     * @param v2</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    public boolean isLess(Comparable v1, Comparable v2)&#123;</div><div class="line">        return v1.compareTo(v2) &lt; 0;</div><div class="line">    &#125;</div><div class="line">    /**</div><div class="line">     * v1是否大于v2</div><div class="line">     * @param v1</div><div class="line">     * @param v2</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    public boolean isGreater(Comparable v1, Comparable v2)&#123;</div><div class="line">        return v1.compareTo(v2) &gt; 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void exch(Comparable[] arr,int i, int j)&#123;</div><div class="line">        Comparable temp = arr[i];</div><div class="line">        arr[i] = arr[j];</div><div class="line">        arr[j] = temp;</div><div class="line">    &#125;</div><div class="line">    protected  abstract void sort(Comparable[] arr);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
     
@@ -339,8 +326,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/05/jvm的内存区域划分-md/" rel="next" title="jvm的内存区域划分.md">
-                <i class="fa fa-chevron-left"></i> jvm的内存区域划分.md
+              <a href="/2017/11/05/jvm垃圾收集器与内存分配策略-md/" rel="next" title="jvm垃圾收集器与内存分配策略.md">
+                <i class="fa fa-chevron-left"></i> jvm垃圾收集器与内存分配策略.md
               </a>
             
           </div>
@@ -348,10 +335,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/06/选择排序算法-md/" rel="prev" title="选择排序算法.md">
-                选择排序算法.md <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -467,7 +450,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象已死"><span class="nav-number">1.</span> <span class="nav-text">对象已死</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用计算法"><span class="nav-number">1.1.</span> <span class="nav-text">引用计算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根搜索算法"><span class="nav-number">1.2.</span> <span class="nav-text">根搜索算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GcRoot对象有以下这些"><span class="nav-number">1.2.1.</span> <span class="nav-text">GcRoot对象有以下这些</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">2.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标记清除算法"><span class="nav-number">2.1.</span> <span class="nav-text">标记清除算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制算法"><span class="nav-number">2.2.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标记整理算法"><span class="nav-number">2.3.</span> <span class="nav-text">标记整理算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">3.</span> <span class="nav-text">垃圾收集器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#选择排序"><span class="nav-number">1.</span> <span class="nav-text">选择排序</span></a></li></ol></div>
             
 
           </div>
