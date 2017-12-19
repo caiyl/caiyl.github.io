@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/caiyl/images/master/%E9%94%812.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/caiyl/images/master/jvisual%E7%9B%91%E6%8E%A7%E5%9B%BE.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/caiyl/images/master/dump%E5%A0%86.png">
-<meta property="og:updated_time" content="2017-12-19T08:55:55.000Z">
+<meta property="og:updated_time" content="2017-12-19T12:58:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jconsole的使用">
 <meta name="twitter:description" content="jconsole是基于jmx之上的一个jvm的监控工具。监控主要分以下几个区域  概览 内存 线程 类 vm概要 MBean  本地的jvm程序可以直接启动，远程的jvm程序需要添加jvm参数才能让jconsole实现远程监控。 -Dcom.sun.management.jmxremote.port=8999 -Dcom.sun.management.jmxremote.authenticate=">
@@ -327,7 +327,31 @@
 <p><strong>检测死锁</strong></p>
 <p>jconsole还有个强大的功能，检测死锁。点击检测死锁按钮，可以检测到死锁，如图中的线性threadone和线程threadtwo就是一对死锁，大家互相等待。<br><img src="https://raw.githubusercontent.com/caiyl/images/master/%E9%94%811.png" alt=""><br>从图中可以看到线程threadone在等待锁java.lang.String@753ce0d9，改锁被threadtwo占有，同时线程threadone占有锁java.land.String@5b3f92c4。同样threadtwo在等待threadone占有的锁。如下图<br><img src="https://raw.githubusercontent.com/caiyl/images/master/%E9%94%812.png" alt=""></p>
 <p>推荐使用jconsole的升级版，jvisualvm。jvisualvm实现远程监控同样需要应用程序添加和前面jconsole的jvm参数，连接方式与jconsole大同小异，监控大概如下图。<br><img src="https://raw.githubusercontent.com/caiyl/images/master/jvisual%E7%9B%91%E6%8E%A7%E5%9B%BE.png" alt=""><br>jvisualvm可以进行dump堆，和dump线程，从而更详细地分析堆与线程的使用情况。如下图是堆dump，可以看到类实例的对象数和占比。<br><img src="https://raw.githubusercontent.com/caiyl/images/master/dump%E5%A0%86.png" alt=""></p>
-
+<p>JConsole里“执行GC”的按钮原理是通过JMX API触发目标JVM进行GC。</p>
+<p>代码可以参考MemoryTab类里面的”MemoryPanel.gc“线程，<br>sun.tools.jconsole.MemoryTab.gc()，如下</p>
+<pre><code>public void gc() {  
+    new Thread(&quot;MemoryPanel.gc&quot;) {  
+        public void run() {  
+            ProxyClient proxyClient = vmPanel.getProxyClient();  
+            try {  
+                proxyClient.getMemoryMXBean().gc();  
+            } catch (UndeclaredThrowableException e) {  
+                proxyClient.markAsDead();  
+            } catch (IOException e) {  
+                // Ignore  
+            }  
+        }  
+    }.start();  
+}  
+</code></pre><p>这里的java.lang.management.MemoryMXBean.gc()<br>在openJDK中的实现是sun.management.MemoryImpl.gc()</p>
+<pre><code>public void gc() {  
+    Runtime.getRuntime().gc();  
+}  
+</code></pre><p>也就是和java.lang.System.gc()一样</p>
+<pre><code>public static void gc() {  
+    Runtime.getRuntime().gc();  
+}  
+</code></pre>
       
     </div>
     
