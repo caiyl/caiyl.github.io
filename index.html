@@ -301,6 +301,12 @@
         
           
             <p>##netty组件<br>netty有8个组件组成，如下图<br><img src="https://raw.githubusercontent.com/caiyl/images/master/netty%E7%BB%84%E4%BB%B6.png" alt=""></p>
+<h3 id="bootstrap与ServerBootstrap"><a href="#bootstrap与ServerBootstrap" class="headerlink" title="bootstrap与ServerBootstrap"></a>bootstrap与ServerBootstrap</h3><p>Bootstrap用于客户端，ServerBootstrap用于服务端</p>
+<p><strong>Bootstrap用1个EventLoopGroup处理io事件，而ServerBootstrap用2个EventLoopGroup处理io。</strong></p>
+<p>ServerBootStrap中，其中一个EventLoopGroup用来处理监听接收客户端的连接，而另一个EventLoopGroup用来处理已经连接上的客户端连接。可以用一个EventLoopGroup充当两个角色即用于接收客户端连接，同时处理客户端的连接，但是当在高并发的时候，由于需要处理客户端连接，有可能导致客户端连接超时。所以在高并发的场景，最好使用两个EventLoopGroup。</p>
+<p>###ChannelPipeline<br>ChannelPipeline用于添加ChannelHandler，在同一个ChannelPipeline里，通过ChannelInboundHandler 和ChannelOutboundHandler，可以在处理输入与输出。ChannelHandler中持有一个ChannelHandlerContext对象，可以通过该引用对象发送消息，也可以直接通过channel发送消息。</p>
+<h3 id="ChannelHandler"><a href="#ChannelHandler" class="headerlink" title="ChannelHandler"></a>ChannelHandler</h3><p>ChannelHandler包括ChannelInboundHandler和ChannelOutboundHandler，还有编码器StringEncoder，SimpleChannelInboundHandler等。</p>
+<p>###EventLoopGroup与EventLoop<br>EventLoop的继承关系<br><img src="https://raw.githubusercontent.com/caiyl/images/master/EventLoop%E7%9A%84%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png" alt=""><br>EventLoopGroup里面包含一组EventLoop，Eventloop类继承了EventLoopGroup,当一个Channel连接的时候，从EventloopGroup中取出一个EventLoop来处理该Channel的所有io事件，所以netty不用担心线程的并发问题，因为每个channel都交由一个确定的Eventloop处理，不会改变。</p>
 
           
         
