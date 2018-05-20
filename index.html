@@ -229,6 +229,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/20/java线程池/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caiyl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caiyl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/20/java线程池/" itemprop="url">java线程池</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-20T21:02:08+08:00">
+                2018-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#java线程池的使用</p>
+<p>##java线程池的种类<br>主要有4种，可以通过调研Executors种的静态工厂方法之一来创建。<br>newFixedThreadPool,FixedThreadPool<strong>固定线程最大数量</strong>。<br>newCachedThreadPool创建一个<strong>可缓存</strong>的线程池，当线程池的当前规模超过了处理请求则回收空闲的线程，该线程池的规模不存在限制。<br>newSingleThreadExecutor是一个<strong>单线程</strong>的Executor，它创建单个线程来执行任务，线程串行执行。<br>newScheduledThreadPool创建的是一个<strong>固定长度的线程池</strong>，<strong>可延迟、或定时</strong>的方法来执行任务。</p>
+<p>##Executor的生命周期<br>为了解决执行服务的生命周期，Executor扩展了ExecutorService接口，添加了一些生命周期的管理方法</p>
+<ol>
+<li>shutdown</li>
+<li>shutdownNow</li>
+<li>isShutdown</li>
+<li>isTerminated</li>
+<li>awaitTermination</li>
+</ol>
+<p>ExecutorService的生命周期有3中状态：运行、关闭、已终止。shutdown方法执行平缓的关闭过程：不再接受新的任务，同时等待已经提交的任务执行完成–包括哪些还没开始的任务。shutdownNow方法讲执行粗暴的关闭方式：它将尝试取消所有运行中的任务，并且不再启动队列中未执行的任务。</p>
+<p>##延迟任务与周期任务<br>Timer类可以延迟任务已经周期任务，但是存在一些缺陷，Timer只创建一个线程。如果某个任务执行的时间过长，那么将破坏其他TimerTask的定时精确性。Timer的另一个问题的如果TimerTask跑出一个未检查的异常，那么Timer将终止定时线程，新的任务无法执行（线程泄露）。<br>ScheduledthreadPoolExecutor</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/netty的组件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1485,7 +1616,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1528,7 +1659,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
