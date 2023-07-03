@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>BeanFactoryPostProcessor后置处理器分析</title>
+    <url>/2017/08/29/BeanFactoryPostProcessor%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<p>BeanFactoryPostProcessor接口</p>
+<p>bean工厂后置处理器,在bean创建之前，对bean工厂里的BeanDefinition对象进行加工处理，例如解释propertyValues属性</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;xmlPropertiesBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.XmlPropertiesBean&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;loginUrl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;loginUrl&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对${loginUrl}的解释替换工作由<strong>PropertySourcesPlaceholderConfigurer</strong>类完成。下面进入debug模式，验证解析过程。</p>
+<p>首先在类<strong>PlaceholderConfigurerSupport</strong>的<strong>doProcessProperties</strong>方法的visitor.visitBeanDefinition(bd);所在行打上断点，并设置断点的条件**”xmlPropertiesBean”.equals(curName)**，如下图</p>
+<span id="more"></span>
+
+<p><img src="/2017/08/29/BeanFactoryPostProcessor%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%E5%88%86%E6%9E%90/5.jpg" alt="5"></p>
+<p>在断点处进行Evaluate执行代码，查看xmlPropertiesBean的loginUrl属性值，可以发现，该值还未替换。此时还没执行完PlaceholderConfigurerSupport后置处理器，接着F8单步执行完visitor.visitBeanDefinition(bd);该行代码，再观察xmlPropertiesBean的loginUrl属性值为<a href="http://www.baidu.com如下图/">www.baidu.com如下图</a></p>
+<p><img src="/2017/08/29/BeanFactoryPostProcessor%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%E5%88%86%E6%9E%90/6.jpg" alt="6"></p>
+<p><strong>visitor.visitBeanDefinition访问者模式</strong></p>
+<p>注意注解@Value(“${loginUrl}”)并不是由BeanFactoryPostProcessor解析的,下面的Value注解源码，可以看出@Value是AutowiredAnnotationBeanPostProcessor解释的。也就是由BeanPostProcessor处理的，和Autowired一样。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springframework.beans.factory.annotation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Annotation used at the field or method/constructor parameter level</span></span><br><span class="line"><span class="comment"> * that indicates a default value expression for the annotated element.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Typically used for expression-driven or property-driven dependency injection.</span></span><br><span class="line"><span class="comment"> * Also supported for dynamic resolution of handler method arguments &amp;mdash; for</span></span><br><span class="line"><span class="comment"> * example, in Spring MVC.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;A common use case is to inject values using</span></span><br><span class="line"><span class="comment"> * &lt;code&gt;#&#123;systemProperties.myProp&#125;&lt;/code&gt; style SpEL (Spring Expression Language)</span></span><br><span class="line"><span class="comment"> * expressions. Alternatively, values may be injected using</span></span><br><span class="line"><span class="comment"> * &lt;code&gt;$&#123;my.app.myProp&#125;&lt;/code&gt; style property placeholders.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Note that actual processing of the &#123;<span class="doctag">@code</span> <span class="doctag">@Value</span>&#125; annotation is performed</span></span><br><span class="line"><span class="comment"> * by a &#123;<span class="doctag">@link</span> org.springframework.beans.factory.config.BeanPostProcessor</span></span><br><span class="line"><span class="comment"> * BeanPostProcessor&#125; which in turn means that you &lt;em&gt;cannot&lt;/em&gt; use</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> <span class="doctag">@Value</span>&#125; within</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.beans.factory.config.BeanPostProcessor</span></span><br><span class="line"><span class="comment"> * BeanPostProcessor&#125; or</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.beans.factory.config.BeanFactoryPostProcessor BeanFactoryPostProcessor&#125;</span></span><br><span class="line"><span class="comment"> * types. Please consult the javadoc for the &#123;<span class="doctag">@link</span> AutowiredAnnotationBeanPostProcessor&#125;</span></span><br><span class="line"><span class="comment"> * class (which, by default, checks for the presence of this annotation).</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Juergen Hoeller</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 3.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> AutowiredAnnotationBeanPostProcessor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> Autowired</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.beans.factory.config.BeanExpressionResolver</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.beans.factory.support.AutowireCandidateResolver#getSuggestedValue</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Value &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The actual value expression such as &lt;code&gt;#&#123;systemProperties.myProp&#125;&lt;/code&gt;</span></span><br><span class="line"><span class="comment">	 * or property placeholder such as &lt;code&gt;$&#123;my.app.myProp&#125;&lt;/code&gt;.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
     <title>FactoryBean一探究竟.md</title>
     <url>/2023/06/29/FactoryBean%E4%B8%80%E6%8E%A2%E7%A9%B6%E7%AB%9F-md/</url>
     <content><![CDATA[<h2 id="Factorybean是什么？"><a href="#Factorybean是什么？" class="headerlink" title="Factorybean是什么？"></a>Factorybean是什么？</h2><p>factorybean是spring的一个接口类，是spring的一个扩展点之一。先来看一下具体的用法吧，不多说，上代码。源码</p>
@@ -37,60 +57,6 @@
 <p><img src="/2023/06/29/FactoryBean%E4%B8%80%E6%8E%A2%E7%A9%B6%E7%AB%9F-md/3.png" alt="image-20230303173015635"></p>
 <p><img src="/2023/06/29/FactoryBean%E4%B8%80%E6%8E%A2%E7%A9%B6%E7%AB%9F-md/4.png" alt="image-20230303173015635"></p>
 <p>这两个factoryBean都是利用动态代理生产代理类，交给spring容器管理。</p>
-]]></content>
-      <tags>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>BeanFactoryPostProcessor后置处理器分析</title>
-    <url>/2017/08/29/BeanFactoryPostProcessor%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<p>BeanFactoryPostProcessor接口</p>
-<p>bean工厂后置处理器,在bean创建之前，对bean工厂里的BeanDefinition对象进行加工处理，例如解释propertyValues属性</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;xmlPropertiesBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.XmlPropertiesBean&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;loginUrl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;loginUrl&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>对${loginUrl}的解释替换工作由<strong>PropertySourcesPlaceholderConfigurer</strong>类完成。下面进入debug模式，验证解析过程。</p>
-<p>首先在类<strong>PlaceholderConfigurerSupport</strong>的<strong>doProcessProperties</strong>方法的visitor.visitBeanDefinition(bd);所在行打上断点，并设置断点的条件**”xmlPropertiesBean”.equals(curName)**，如下图</p>
-<span id="more"></span>
-
-<p><img src="/2017/08/29/BeanFactoryPostProcessor%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%E5%88%86%E6%9E%90/5.jpg" alt="5"></p>
-<p>在断点处进行Evaluate执行代码，查看xmlPropertiesBean的loginUrl属性值，可以发现，该值还未替换。此时还没执行完PlaceholderConfigurerSupport后置处理器，接着F8单步执行完visitor.visitBeanDefinition(bd);该行代码，再观察xmlPropertiesBean的loginUrl属性值为<a href="http://www.baidu.com如下图/">www.baidu.com如下图</a></p>
-<p><img src="/2017/08/29/BeanFactoryPostProcessor%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%E5%88%86%E6%9E%90/6.jpg" alt="6"></p>
-<p><strong>visitor.visitBeanDefinition访问者模式</strong></p>
-<p>注意注解@Value(“${loginUrl}”)并不是由BeanFactoryPostProcessor解析的,下面的Value注解源码，可以看出@Value是AutowiredAnnotationBeanPostProcessor解释的。也就是由BeanPostProcessor处理的，和Autowired一样。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springframework.beans.factory.annotation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Annotation used at the field or method/constructor parameter level</span></span><br><span class="line"><span class="comment"> * that indicates a default value expression for the annotated element.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Typically used for expression-driven or property-driven dependency injection.</span></span><br><span class="line"><span class="comment"> * Also supported for dynamic resolution of handler method arguments &amp;mdash; for</span></span><br><span class="line"><span class="comment"> * example, in Spring MVC.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;A common use case is to inject values using</span></span><br><span class="line"><span class="comment"> * &lt;code&gt;#&#123;systemProperties.myProp&#125;&lt;/code&gt; style SpEL (Spring Expression Language)</span></span><br><span class="line"><span class="comment"> * expressions. Alternatively, values may be injected using</span></span><br><span class="line"><span class="comment"> * &lt;code&gt;$&#123;my.app.myProp&#125;&lt;/code&gt; style property placeholders.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Note that actual processing of the &#123;<span class="doctag">@code</span> <span class="doctag">@Value</span>&#125; annotation is performed</span></span><br><span class="line"><span class="comment"> * by a &#123;<span class="doctag">@link</span> org.springframework.beans.factory.config.BeanPostProcessor</span></span><br><span class="line"><span class="comment"> * BeanPostProcessor&#125; which in turn means that you &lt;em&gt;cannot&lt;/em&gt; use</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> <span class="doctag">@Value</span>&#125; within</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.beans.factory.config.BeanPostProcessor</span></span><br><span class="line"><span class="comment"> * BeanPostProcessor&#125; or</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.beans.factory.config.BeanFactoryPostProcessor BeanFactoryPostProcessor&#125;</span></span><br><span class="line"><span class="comment"> * types. Please consult the javadoc for the &#123;<span class="doctag">@link</span> AutowiredAnnotationBeanPostProcessor&#125;</span></span><br><span class="line"><span class="comment"> * class (which, by default, checks for the presence of this annotation).</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Juergen Hoeller</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 3.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> AutowiredAnnotationBeanPostProcessor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> Autowired</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.beans.factory.config.BeanExpressionResolver</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.beans.factory.support.AutowireCandidateResolver#getSuggestedValue</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Value &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The actual value expression such as &lt;code&gt;#&#123;systemProperties.myProp&#125;&lt;/code&gt;</span></span><br><span class="line"><span class="comment">	 * or property placeholder such as &lt;code&gt;$&#123;my.app.myProp&#125;&lt;/code&gt;.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-  </entry>
-  <entry>
-    <title>mysql知识</title>
-    <url>/2020/01/03/mysql%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<h2 id="批量插入测试数据"><a href="#批量插入测试数据" class="headerlink" title="批量插入测试数据"></a>批量插入测试数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span></span><br><span class="line">    IF <span class="keyword">EXISTS</span> test_insert;</span><br><span class="line"></span><br><span class="line">DELIMITER ;;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> test_insert()</span><br><span class="line"></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">DECLARE</span> number <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span>;</span><br><span class="line">    WHILE (number <span class="operator">&lt;=</span> <span class="number">10000</span>) DO</span><br><span class="line"></span><br><span class="line">        <span class="keyword">insert</span> <span class="keyword">into</span> testabc(a,b,c) <span class="keyword">values</span>(concat(<span class="string">&#x27;a&#x27;</span>,number),concat(<span class="string">&#x27;b&#x27;</span>,number),concat(<span class="string">&#x27;c&#x27;</span>,number));</span><br><span class="line">        <span class="keyword">SET</span> number <span class="operator">=</span> number <span class="operator">+</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">END</span> WHILE;</span><br><span class="line">    <span class="keyword">commit</span>;</span><br><span class="line"><span class="keyword">END</span>;;</span><br><span class="line"><span class="keyword">CALL</span> test_insert();</span><br></pre></td></tr></table></figure>
-
-<h2 id="mysql日志"><a href="#mysql日志" class="headerlink" title="mysql日志"></a>mysql日志</h2><h3 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h3><p>binlog是在<strong>server层的</strong>两个主要的用途</p>
-<ol>
-<li>主从复制</li>
-<li>数据恢复</li>
-</ol>
-<p>binlog的格式也有3种</p>
-<ol>
-<li>statement：基于sql，数据有可能丢失，像now()函数</li>
-<li>row:文件大，数据不丢失</li>
-<li>Mixed</li>
-</ol>
-<p>Undolog</p>
-<h2 id="icp索引下推"><a href="#icp索引下推" class="headerlink" title="icp索引下推"></a>icp索引下推</h2><p>加上有联合索引a、b、c字段，where a &#x3D;</p>
-<h1 id><a href="#" class="headerlink" title></a></h1>]]></content>
-  </entry>
-  <entry>
-    <title>循环依赖</title>
-    <url>/2017/03/29/%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/</url>
-    <content><![CDATA[<p>关于循环依赖先说几个点总结</p>
-<ol>
-<li>依赖三级缓存以及<strong>提前暴露引用</strong></li>
-<li>循环依赖只能是单例的，如果是多例则会报错，多例循环依赖本身就是错误的，无法确定依赖那一个实例</li>
-<li>构造器注入的循环依赖无法处理，会报错</li>
-</ol>
 ]]></content>
       <tags>
         <tag>spring</tag>
@@ -161,6 +127,40 @@
 
 <p><a href="https://github.com/caiyl/cai.git">代码链接</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>循环依赖</title>
+    <url>/2017/03/29/%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/</url>
+    <content><![CDATA[<p>关于循环依赖先说几个点总结</p>
+<ol>
+<li>依赖三级缓存以及<strong>提前暴露引用</strong></li>
+<li>循环依赖只能是单例的，如果是多例则会报错，多例循环依赖本身就是错误的，无法确定依赖那一个实例</li>
+<li>构造器注入的循环依赖无法处理，会报错</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql知识</title>
+    <url>/2020/01/03/mysql%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<h2 id="批量插入测试数据"><a href="#批量插入测试数据" class="headerlink" title="批量插入测试数据"></a>批量插入测试数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span></span><br><span class="line">    IF <span class="keyword">EXISTS</span> test_insert;</span><br><span class="line"></span><br><span class="line">DELIMITER ;;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> test_insert()</span><br><span class="line"></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">DECLARE</span> number <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span>;</span><br><span class="line">    WHILE (number <span class="operator">&lt;=</span> <span class="number">10000</span>) DO</span><br><span class="line"></span><br><span class="line">        <span class="keyword">insert</span> <span class="keyword">into</span> testabc(a,b,c) <span class="keyword">values</span>(concat(<span class="string">&#x27;a&#x27;</span>,number),concat(<span class="string">&#x27;b&#x27;</span>,number),concat(<span class="string">&#x27;c&#x27;</span>,number));</span><br><span class="line">        <span class="keyword">SET</span> number <span class="operator">=</span> number <span class="operator">+</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">END</span> WHILE;</span><br><span class="line">    <span class="keyword">commit</span>;</span><br><span class="line"><span class="keyword">END</span>;;</span><br><span class="line"><span class="keyword">CALL</span> test_insert();</span><br></pre></td></tr></table></figure>
+
+<h2 id="mysql日志"><a href="#mysql日志" class="headerlink" title="mysql日志"></a>mysql日志</h2><h3 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h3><p>binlog是在<strong>server层的</strong>两个主要的用途</p>
+<ol>
+<li>主从复制</li>
+<li>数据恢复</li>
+</ol>
+<p>binlog的格式也有3种</p>
+<ol>
+<li>statement：基于sql，数据有可能丢失，像now()函数</li>
+<li>row:文件大，数据不丢失</li>
+<li>Mixed</li>
+</ol>
+<p>Undolog</p>
+<h2 id="icp索引下推"><a href="#icp索引下推" class="headerlink" title="icp索引下推"></a>icp索引下推</h2><p>加上有联合索引a、b、c字段，where a &#x3D;</p>
+<h1 id><a href="#" class="headerlink" title></a></h1>]]></content>
   </entry>
   <entry>
     <title>遍历redis删除生产key</title>
